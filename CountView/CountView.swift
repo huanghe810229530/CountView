@@ -17,12 +17,28 @@ class CounterView: UIView, UITextFieldDelegate {
     var hGap: CGFloat = 2
     var vGap: CGFloat = 2
     
+    
     var countControlSideLength: CGFloat = 40 {
         didSet {
             setNeedsLayout()
         }
     }
     
+    var styleColor: UIColor = UIColor.blackColor() {
+        didSet {
+            addControl.lineColor = styleColor
+            plusControl.lineColor = styleColor
+            setNeedsDisplay()
+        }
+    }
+    
+    var hightlightColor: UIColor = UIColor(white: 0.8, alpha: 1) {
+        didSet {
+            addControl.hightlightColor = hightlightColor
+            plusControl.hightlightColor = hightlightColor
+            setNeedsDisplay()
+        }
+    }
     
     private var addControl: CountControl!
     private var plusControl: CountControl!
@@ -38,6 +54,13 @@ class CounterView: UIView, UITextFieldDelegate {
         configureSubViews()
     }
     
+    convenience init(frame: CGRect, maxValue: Int, minValue: Int) {
+        self.init(frame: frame)
+        self.maxValue = maxValue
+        self.minValue = minValue
+        currentValue = minValue
+    }
+    
     private func configureSubViews() {
         
         plusControl = CountControl(type: .System)
@@ -51,7 +74,6 @@ class CounterView: UIView, UITextFieldDelegate {
         textfield.textAlignment = .Center
         textfield.keyboardType = .NumberPad
         textfield.delegate = self
-        textfield.text = String(currentValue)
         
         addSubview(plusControl)
         addSubview(addControl)
@@ -86,9 +108,10 @@ class CounterView: UIView, UITextFieldDelegate {
                                   height: CGRectGetHeight(plusControl.frame))
         let rect = CGRect(x: CGRectGetMaxX(plusControl.frame),
                           y: CGRectGetMinY(plusControl.frame),
-                          width: CGRectGetWidth(bounds) - 2 * countControlSideLength,
+                          width: CGRectGetWidth(bounds) - 2 * countControlSideLength - 2 * hGap,
                           height: countControlSideLength)
         textfield.frame = rect
+        textfield.text = String(currentValue)
     }
 
     
@@ -97,14 +120,18 @@ class CounterView: UIView, UITextFieldDelegate {
     override func drawRect(rect: CGRect) {
         // Drawing code
         
-        UIColor.grayColor().setStroke()
+        styleColor.setStroke()
         
         let path = UIBezierPath()
+        path.lineWidth = 2
+        path.moveToPoint(CGPoint(x: CGRectGetMinX(textfield.frame), y: CGRectGetMinY(plusControl.frame)+1))
+        path.addLineToPoint(CGPoint(x: CGRectGetMaxX(textfield.frame), y: CGRectGetMinY(plusControl.frame)+1))
         path.moveToPoint(CGPoint(x: CGRectGetMinX(textfield.frame), y: CGRectGetMaxY(plusControl.frame)-1))
         path.addLineToPoint(CGPoint(x: CGRectGetMaxX(textfield.frame), y: CGRectGetMaxY(plusControl.frame)-1))
         path.stroke()
     }
  
+    // MARK: - UITextFieldDelegate
     func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
         
         if  Int(string) == nil && string != "" {
@@ -153,9 +180,10 @@ class CounterView: UIView, UITextFieldDelegate {
 class CountControl: UIButton {
     
     @IBInspectable var lineColor: UIColor = UIColor.redColor()
-    @IBInspectable var fillColor: UIColor = UIColor.clearColor()
-    @IBInspectable var lineWidth: CGFloat = 0.5
+    @IBInspectable private var fillColor: UIColor = UIColor.clearColor()
+    @IBInspectable var lineWidth: CGFloat = 1
     @IBInspectable var isAddButton: Bool = false
+    var hightlightColor: UIColor = UIColor(white: 0.8, alpha: 1)
     
     override func drawRect(rect: CGRect) {
         lineColor.setStroke()
@@ -189,7 +217,7 @@ class CountControl: UIButton {
         
         let ctx = UIGraphicsGetCurrentContext()
         if tracking {
-            CGContextSetFillColorWithColor(ctx, UIColor(white: 0.9, alpha: 0.8).CGColor)
+            CGContextSetFillColorWithColor(ctx, hightlightColor.CGColor)
             CGContextAddPath(ctx, path.CGPath)
             CGContextFillPath(ctx)
         }
