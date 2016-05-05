@@ -11,7 +11,7 @@ import UIKit
 class CounterView: UIView, UITextFieldDelegate {
     
     var minValue: Int = 1
-    var maxValue: Int = 99
+    var maxValue: Int = 999
     private(set) var currentValue = 1
     
     var hGap: CGFloat = 2
@@ -39,6 +39,15 @@ class CounterView: UIView, UITextFieldDelegate {
             setNeedsDisplay()
         }
     }
+    
+    var lineWidth: CGFloat = 1 {
+        didSet {
+            addControl.lineWidth = lineWidth
+            plusControl.lineWidth = lineWidth
+            setNeedsDisplay()
+        }
+    }
+    
     
     private var addControl: CountControl!
     private var plusControl: CountControl!
@@ -123,7 +132,7 @@ class CounterView: UIView, UITextFieldDelegate {
         styleColor.setStroke()
         
         let path = UIBezierPath()
-        path.lineWidth = 2
+        path.lineWidth = lineWidth
         path.moveToPoint(CGPoint(x: CGRectGetMinX(textfield.frame), y: CGRectGetMinY(plusControl.frame)+1))
         path.addLineToPoint(CGPoint(x: CGRectGetMaxX(textfield.frame), y: CGRectGetMinY(plusControl.frame)+1))
         path.moveToPoint(CGPoint(x: CGRectGetMinX(textfield.frame), y: CGRectGetMaxY(plusControl.frame)-1))
@@ -134,11 +143,11 @@ class CounterView: UIView, UITextFieldDelegate {
     // MARK: - UITextFieldDelegate
     func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
         
-        if  Int(string) == nil && string != "" {
+        if  Int(string) == nil && string != "" { // 输入非数字字符
             return false
         }
         
-        if string == "" {
+        if string == "" { // 删除字符
             if let text = textfield.text {
                 
                 let tx = text as NSString
@@ -154,14 +163,15 @@ class CounterView: UIView, UITextFieldDelegate {
         }
         
         if let str = textfield.text {
-            if Int(str) > 10 || Int(str) > maxValue {
+            
+            if Int(str) > maxValue {
                 return false
             }
-            let x = Int(str + string)!
-            if x > maxValue {
+            let final = Int(str + string)! // 最终字符串转Int
+            if final > maxValue {
                 return false
             }
-            currentValue = x
+            currentValue = final
         }else {
             currentValue = Int(string)!
         }

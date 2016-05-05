@@ -14,8 +14,9 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         let frame = CGRect(x: 100, y: 200, width: 120, height: 44)
-        let aview = CounterView(frame: frame, maxValue: 66, minValue: 2)
+        let aview = CounterView(frame: frame, maxValue: 666, minValue: 2)
         aview.styleColor = UIColor(red: 100/255.0, green: 200/255.0, blue: 100/255.0, alpha: 1)
+        aview.countControlSideLength = 30
         aview.hightlightColor = UIColor.redColor()
         view.addSubview(aview)
     }
