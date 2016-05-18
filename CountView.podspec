@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "CountView"
-  s.version      = "0.0.1"
+  s.version      = "0.0.4"
   s.summary      = "金孚sss大厦"
 
   # This description is used to generate tags and improve search results.
@@ -79,7 +79,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/huanghe810229530/CountView.git", :commit => "0.0.1" }
+  s.source       = { :git => "https://github.com/huanghe810229530/CountView.git", :commit => "0.0.4"}
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -104,7 +104,7 @@ Pod::Spec.new do |s|
   #  non-essential files like tests, examples and documentation.
   #
 
-  # s.resource  = "icon.png"
+ s.resource  = "*.png"
   # s.resources = "Resources/*.png"
 
   # s.preserve_paths = "FilesToSave", "MoreFilesToSave"
