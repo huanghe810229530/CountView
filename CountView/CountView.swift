@@ -11,12 +11,8 @@ import UIKit
 /// a Control for count add/plus
 public class CounterView: UIView, UITextFieldDelegate {
     
-    public  var minValue: Int = 1 {
-        didSet {
-            currentValue = minValue
-        }
-    }
-    public  var maxValue: Int = 99
+    public var minValue: Int = 1
+    public var maxValue: Int = 99
     
     /// a block invoke by value changed
     public var valueChanged: ((value: Int) -> Void)?
@@ -40,7 +36,7 @@ public class CounterView: UIView, UITextFieldDelegate {
     }
     
     /// 边框颜色
-    var styleLineColor: UIColor = UIColor.blackColor() {
+    var styleLineColor: UIColor = UIColor.lightGrayColor() {
         didSet {
             addControl.lineColor = styleLineColor
             plusControl.lineColor = styleLineColor
@@ -74,6 +70,9 @@ public class CounterView: UIView, UITextFieldDelegate {
         }
     }
     
+    /// 加减控件边长
+    var countControlSideLength: CGFloat = 40
+    
     //MARK: - Private properties
     /// 加号控件距离父视图的水平距离
     private var hGap: CGFloat = 2
@@ -81,8 +80,6 @@ public class CounterView: UIView, UITextFieldDelegate {
     private var vGap: CGFloat = 2
     /// textField距离加减控件的左右边距
     private var filedGap: CGFloat = 5
-    /// 加减控件边长
-    private var countControlSideLength: CGFloat = 40
     
     private var addControl: CountControl!
     private var plusControl: CountControl!
@@ -93,9 +90,6 @@ public class CounterView: UIView, UITextFieldDelegate {
     convenience required public init(frame: CGRect, maxValue: Int, minValue: Int) {
         self.init(frame: frame)
         
-        let contidion = (frame.size.width >= 120 && frame.size.height >= 40)
-        precondition(contidion, "frame too small")
-        
         self.maxValue = maxValue
         self.minValue = minValue
         currentValue = minValue
@@ -104,8 +98,6 @@ public class CounterView: UIView, UITextFieldDelegate {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        let contidion = (frame.size.width >= 120 && frame.size.height >= 40)
-        precondition(contidion, "frame too small")
         
         configureSubViews()
     }
@@ -113,6 +105,12 @@ public class CounterView: UIView, UITextFieldDelegate {
     
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    //MARK: - Public Methods
+    public func changeCurrentValueTo(newValue: Int) {
+        currentValue = newValue
+        textfield.text = String(newValue)
     }
     
     //MARK: - Privates Methods
@@ -169,7 +167,7 @@ public class CounterView: UIView, UITextFieldDelegate {
         textfield.text = String(currentValue)
         textfield.layer.borderColor = styleLineColor.CGColor
     }
-
+    
     // MARK: - UITextFieldDelegate
     public func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
         
@@ -193,6 +191,10 @@ public class CounterView: UIView, UITextFieldDelegate {
         }
         
         if let str = textfield.text {
+            
+            if Int(string) == 0 && str.isEmpty {
+                return false
+            }
             
             if Int(str) > maxValue {
                 return false
@@ -223,7 +225,7 @@ public class CounterView: UIView, UITextFieldDelegate {
 class CountControl: UIButton {
     
     /// 线框颜色
-    @IBInspectable var lineColor: UIColor = UIColor.redColor()
+    @IBInspectable var lineColor: UIColor = UIColor.lightGrayColor()
     /// 加减按钮颜色
     @IBInspectable var plusColor: UIColor = UIColor.blackColor()
     /// 线框宽度
@@ -276,7 +278,7 @@ class CountControl: UIButton {
             CGContextAddPath(ctx, path.CGPath)
             CGContextFillPath(ctx)
         }
-
+        
         if enabled {
             plusColor.setStroke()
         }else {
