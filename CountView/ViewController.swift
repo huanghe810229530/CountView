@@ -14,13 +14,16 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         let frame = CGRect(x: 100, y: 200, width: 140, height: 44)
-        let aview = CounterView(frame: frame, maxValue: 666, minValue: 1)
+        let aview = CounterView(frame: frame)
+        aview.minValue = 8
+        aview.maxValue = 987
         aview.styleLineColor = UIColor.lightGrayColor()
 //        aview.countControlSideLength = 30
         aview.hightlightColor = UIColor.lightGrayColor()
         aview.valueChanged = { d in
             print("changed to value: \(d)")
         }
+
         view.addSubview(aview)
     }
 
